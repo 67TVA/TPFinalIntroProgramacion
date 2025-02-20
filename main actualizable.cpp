@@ -26,7 +26,7 @@ void Sistema::DibujarPlantilla(){
 	cout<<"Muevete para esquivar los meteoritos y dispara a las X!(25)"<<endl;
 	cout<<"-------------------------"<<endl;
 	for(int i = 0;i < 10;i++){
-		cout<<"-                       -"<<endl;};
+	cout<<"-                       -"<<endl;};
 	cout<<"-------------------------"<<endl;
 	cout<<"                         "<<endl;
 	cout<<"> Puntaje: "<<puntaje<<endl;
@@ -36,25 +36,41 @@ void Sistema::DibujarPlantilla(){
 class EstructuraDePosicion{
 private:
 	
+	clock_t tempo;
+	clock_t paso;
+	int direccion; //direccion xy
+	int col;
+	int x,y;
+	void borrar();
+	
 public:
+	EstructuraDePosicion(int velocidad,int color);
+    int PosX(){return x;};
+	int PosY(){return y;};
+	virtual void resetposicion();
+	virtual void dibujar();
+	virtual void mover();
+	void start();
 };
 
-class Meteorito:public EstructuraDePosicion{
+class Meteorito: public EstructuraDePosicion{
 private:
 	
 public:
 };
 
-class X:public EstructuraDePosicion {
+class X: public EstructuraDePosicion {
 private:
 	
 public:
 };
 
 class NaveJugador{
-private:
-	
 public:
+	int X, Y;
+	void resetposicion (){gotoxy(11,14);};
+	void borrar(){};
+	void dibujar(){};
 };
 
 class Disparo{
@@ -66,13 +82,13 @@ class Pelota{
 	
 	clock_t tempo;
 	clock_t paso;
-	int direccionX;
-	int direccionY;
+	int direccionX; //cambiar a 1
+	int direccionY; //cambiar a 1
 	int col;
 	int x,y;
 	void borrar();
-	void dibujar();
-	void mover();
+	void dibujar(); //public virtual
+	void mover(); // public virtual
 	
 public:
 	
@@ -147,6 +163,7 @@ void Pelota::mover(){
 int main(int argc, char *argv[]) {
     Sistema sistema;
 	sistema.DibujarPlantilla();
+	NaveJugador NaveJ;
 	Pelota *p1 = new Pelota(20,32);
 	Pelota *p2 = new Pelota(20,32);
 	
@@ -158,12 +175,25 @@ int main(int argc, char *argv[]) {
 			int tecla= getch();
 			switch(tecla){
 			case 'w':
-			break;
+				if (NaveJ.Y < bordeSup){
+					
+					NaveJ.Y += 1;
+				};
+                break;
 			case 'a':
+				if (NaveJ.X > bordeIzq){
+					NaveJ.X -= 1;
+				};
 				break;
 			case 's':
+				if (NaveJ.Y > bordeInf){
+					NaveJ.Y -= 1;
+				};
 				break;
 			case 'd':
+				if (NaveJ.X < bordeDer) {
+					NaveJ.X += 1;
+				};
 				break;
 			case ' ':
 				break;
