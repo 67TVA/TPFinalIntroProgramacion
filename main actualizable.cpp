@@ -29,8 +29,8 @@ void Sistema::DibujarPlantilla(){
 	cout<<"-                       -"<<endl;};
 	cout<<"-------------------------"<<endl;
 	cout<<"                         "<<endl;
-	cout<<"> Puntaje: "<<puntaje<<endl;
 	cout<<"> Vidas: "<<vidas<<endl;
+	cout<<"> Puntaje: "<<puntaje<<endl;
 }
 
 class EstructuraDePosicion{
@@ -132,8 +132,6 @@ void Meteorito::mover(){
 		setY (4);
 	}
 
-	//if (y >= bordeInf) {
-	//	direccionY = -1;
 
 	setY (PosY() + 1);
 
@@ -144,6 +142,7 @@ private:
 	
 public:
 	void dibujar();
+	X(int velocidad , int color ) : EstructuraDePosicion(velocidad, color) {};
 };
 
 void X::dibujar(){
@@ -179,7 +178,7 @@ class Disparo : public EstructuraDePosicion{
 private:
 	
 public:
-	Disparo(int velocidad = 8, int color = 3) : EstructuraDePosicion(velocidad, color) {}
+	Disparo(int velocidad = 8, int color = 3) : EstructuraDePosicion(velocidad, color) {};
 	void dibujar();
 	void mover();
 };
@@ -192,8 +191,7 @@ void Disparo::mover(){
 	
 	
 	
-	if (PosY() <=bordeSup) {
-		
+	if (PosY() == bordeSup) {
 	}
 	
 	//if (y >= bordeInf) {
@@ -214,8 +212,8 @@ int main(int argc, char *argv[]) {
 	sistema.DibujarPlantilla();
 	NaveJugador NaveJ;
 	NaveJ.resetposicion();
-	EstructuraDePosicion *p1 = new EstructuraDePosicion(20,32);
-	EstructuraDePosicion *p2 = new EstructuraDePosicion(20,32);
+	EstructuraDePosicion *p1 = new X(20,31);
+	EstructuraDePosicion *p2 = new X(30,32);
 	p2->setY(7);
 	EstructuraDePosicion *m1 = new Meteorito;
 	EstructuraDePosicion *d1 = new Disparo;
@@ -228,12 +226,26 @@ int main(int argc, char *argv[]) {
 		if (m1->PosX() == NaveJ.X && m1->PosY() == NaveJ.Y){
 			NaveJ.resetposicion();
 			vidas--;
+			gotoxy(10,17);
+			textcolor(7);
+			cout<<vidas;
 		};
 		if (DisparoActivo){
 			d1->start();
-			if (d1->PosY() == bordeSup){
+			if (d1->PosY() == bordeSup-1){
 				DisparoActivo = false;
+				gotoxy(d1->PosX(), bordeSup-1);
+				textcolor(7);
+				cout<<"-";
 			}
+			if(d1->PosX() == p1->PosX() && d1->PosY() == p1->PosY() || d1->PosX() == p2->PosX() && d1->PosY() == p2->PosY()){
+				puntaje += 100;
+				DisparoActivo = false;
+				gotoxy(12,18);
+				textcolor(7);
+			    cout<<puntaje;
+			};
+			
 		};
 
 		if (kbhit()) {
@@ -279,7 +291,6 @@ int main(int argc, char *argv[]) {
 			
 		};
 	};
-	
 	
 	
 	return 0;
