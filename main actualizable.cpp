@@ -16,6 +16,8 @@ class Sistema{
 private:
 	int puntaje = 0;
 	int vidas = 5;
+	int mensaje;
+	bool DisparoActivo = false;
 public:
 	void DibujarPlantilla();
 };
@@ -207,6 +209,7 @@ void Disparo::mover(){
 int main(int argc, char *argv[]) {
 	int vidas = 5;
 	int puntaje = 0;
+	int mensaje;
 	bool DisparoActivo = false;
     Sistema sistema;
 	sistema.DibujarPlantilla();
@@ -241,6 +244,20 @@ int main(int argc, char *argv[]) {
 			if(d1->PosX() == p1->PosX() && d1->PosY() == p1->PosY() || d1->PosX() == p2->PosX() && d1->PosY() == p2->PosY()){
 				puntaje += 100;
 				DisparoActivo = false;
+				gotoxy (27,10);
+				mensaje = rand()%3+1;
+				switch(mensaje){
+				case 1:
+					cout<<"Good shot!        ";
+					break;
+				case 2:
+					cout<<"Bullseye!         ";
+					break;
+				case 3:
+					cout<<"Amazing!         ";
+					break;
+					
+				};
 				gotoxy(12,18);
 				textcolor(7);
 			    cout<<puntaje;
