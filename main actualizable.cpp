@@ -61,7 +61,7 @@ EstructuraDePosicion::EstructuraDePosicion(int velocidad, int color=WHITE){
 	col=color;
 	direccion = 1;
 	x=rand()%20+1;
-	y= 5;
+	y= 6;
 	
 }
 
@@ -175,31 +175,67 @@ void NaveJugador::dibujar(){
 	cout<<'T';
 }
 
-class Disparo{
+class Disparo : public EstructuraDePosicion{
 private:
 	
 public:
+	Disparo(int velocidad = 8, int color = 3) : EstructuraDePosicion(velocidad, color) {}
+	void dibujar();
+	void mover();
 };
 
-
+void Disparo::dibujar(){
+	gotoxy(PosX(),PosY());
+	cout<<'Y';
+}
+void Disparo::mover(){
+	
+	
+	
+	if (PosY() <=bordeSup) {
+		
+	}
+	
+	//if (y >= bordeInf) {
+	//	direccionY = -1;
+	
+	setY (PosY() - 1);
+	
+}	
 
 
 
 
 int main(int argc, char *argv[]) {
+	int vidas = 5;
+	int puntaje = 0;
+	bool DisparoActivo = false;
     Sistema sistema;
 	sistema.DibujarPlantilla();
 	NaveJugador NaveJ;
 	NaveJ.resetposicion();
 	EstructuraDePosicion *p1 = new EstructuraDePosicion(20,32);
 	EstructuraDePosicion *p2 = new EstructuraDePosicion(20,32);
+	p2->setY(7);
 	EstructuraDePosicion *m1 = new Meteorito;
+	EstructuraDePosicion *d1 = new Disparo;
 	
 	
-	while(true){
+	while(vidas > 0){
 		p1->start();
 		p2->start();
 		m1->start();
+		if (m1->PosX() == NaveJ.X && m1->PosY() == NaveJ.Y){
+			NaveJ.resetposicion();
+			vidas--;
+		};
+		if (DisparoActivo){
+			d1->start();
+			if (d1->PosY() == bordeSup){
+				DisparoActivo = false;
+			}
+		};
+
 		if (kbhit()) {
 			
 			int tecla= getch();
@@ -233,6 +269,11 @@ int main(int argc, char *argv[]) {
 				};
 				break;
 			case ' ':
+				if (!DisparoActivo){
+					d1->setX(NaveJ.X);
+					d1->setY(NaveJ.Y-1);
+					DisparoActivo = true;
+				}
 				break;
 			};
 			
