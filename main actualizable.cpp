@@ -47,71 +47,25 @@ public:
 	EstructuraDePosicion(int velocidad,int color);
     int PosX(){return x;};
 	int PosY(){return y;};
+	void setX(int a){ x = a;};
+	void setY(int b){ y = b;};
 	virtual void resetposicion();
 	virtual void dibujar();
 	virtual void mover();
 	void start();
 };
-
-class Meteorito: public EstructuraDePosicion{
-private:
-	
-public:
-};
-
-class X: public EstructuraDePosicion {
-private:
-	
-public:
-};
-
-class NaveJugador{
-public:
-	int X, Y;
-	void resetposicion (){gotoxy(11,14);};
-	void borrar(){};
-	void dibujar(){};
-};
-
-class Disparo{
-private:
-	
-public:
-};
-class Pelota{
-	
-	clock_t tempo;
-	clock_t paso;
-	int direccionX; //cambiar a 1
-	int direccionY; //cambiar a 1
-	int col;
-	int x,y;
-	void borrar();
-	void dibujar(); //public virtual
-	void mover(); // public virtual
-	
-public:
-	
-	Pelota(int velocidad,int color);
-	void start();
-	
-	
-	
-};
-
-Pelota::Pelota(int velocidad, int color=WHITE){
+EstructuraDePosicion::EstructuraDePosicion(int velocidad, int color=WHITE){
 	
 	paso=CLOCKS_PER_SEC/velocidad;
 	tempo=clock();
 	col=color;
-	direccionX = 1;
-	//direccionY = 1;
+	direccion = 1;
 	x=rand()%20+1;
 	y= 5;
 	
 }
 
-void Pelota::start(){
+void EstructuraDePosicion::start(){
 	textcolor(col);
 	
 	
@@ -125,25 +79,27 @@ void Pelota::start(){
 
 
 
-void Pelota::borrar(){
+void EstructuraDePosicion::borrar(){
 	gotoxy(x,y);
 	textcolor(7);
 	cout<<' ';
 	textcolor(col);
 }
 
-void Pelota::dibujar(){
+void EstructuraDePosicion::resetposicion(){}
+
+void EstructuraDePosicion::dibujar(){
 	gotoxy(x,y);
-	cout<<'X';
+	cout<<'x';
 }
 
-void Pelota::mover(){
+void EstructuraDePosicion::mover(){
 	
 	if (x >= bordeDer) {
-		direccionX = -1;
+		direccion = -1;
 	}
 	if (x <= bordeIzq) {
-		direccionX = 1;
+		direccion = 1;
 	}
 	//if (y <= bordeSup) {
 	//	direccionY = 1;
@@ -151,9 +107,79 @@ void Pelota::mover(){
 	//if (y >= bordeInf) {
 	//	direccionY = -1;
 	//}
-	x = x + (1 * direccionX);
+	x = x + (1 * direccion);
 	//y = y + (1 * direccionY);
 }	
+
+class Meteorito: public EstructuraDePosicion{
+private:
+	
+public:
+	Meteorito(int velocidad = 4, int color = 6) : EstructuraDePosicion(velocidad, color) {}
+	void dibujar();
+	void mover();
+};
+void Meteorito::dibujar(){
+	gotoxy(PosX(),PosY());
+	cout<<'O';
+}
+void Meteorito::mover(){
+	
+
+	
+	if (PosY() >=bordeInf) {
+		setX (rand()%24+2);
+		setY (4);
+	}
+
+	//if (y >= bordeInf) {
+	//	direccionY = -1;
+
+	setY (PosY() + 1);
+
+}	
+
+class X: public EstructuraDePosicion {
+private:
+	
+public:
+	void dibujar();
+};
+
+void X::dibujar(){
+	gotoxy(PosX(),PosY());
+	cout<<'X';
+}
+
+
+class NaveJugador{
+public:
+	int X,Y;
+	void resetposicion (){
+		borrar();
+		X = 13;
+		Y = 14;
+		gotoxy(X,Y);
+		dibujar();
+	};
+	void borrar();
+	void dibujar();
+};
+void NaveJugador::borrar(){
+	gotoxy(X,Y);
+	textcolor(7);
+	cout<<' ';
+}
+void NaveJugador::dibujar(){
+	gotoxy(X,Y);
+	cout<<'T';
+}
+
+class Disparo{
+private:
+	
+public:
+};
 
 
 
@@ -164,35 +190,46 @@ int main(int argc, char *argv[]) {
     Sistema sistema;
 	sistema.DibujarPlantilla();
 	NaveJugador NaveJ;
-	Pelota *p1 = new Pelota(20,32);
-	Pelota *p2 = new Pelota(20,32);
+	NaveJ.resetposicion();
+	EstructuraDePosicion *p1 = new EstructuraDePosicion(20,32);
+	EstructuraDePosicion *p2 = new EstructuraDePosicion(20,32);
+	EstructuraDePosicion *m1 = new Meteorito;
+	
 	
 	while(true){
 		p1->start();
 		p2->start();
+		m1->start();
 		if (kbhit()) {
 			
 			int tecla= getch();
 			switch(tecla){
 			case 'w':
-				if (NaveJ.Y < bordeSup){
-					
-					NaveJ.Y += 1;
+				if (NaveJ.Y > bordeSup){
+					NaveJ.borrar();
+					NaveJ.Y -= 1;
+					NaveJ.dibujar();
 				};
                 break;
 			case 'a':
 				if (NaveJ.X > bordeIzq){
+					NaveJ.borrar();
 					NaveJ.X -= 1;
+					NaveJ.dibujar();
 				};
 				break;
 			case 's':
-				if (NaveJ.Y > bordeInf){
-					NaveJ.Y -= 1;
+				if (NaveJ.Y < bordeInf){
+					NaveJ.borrar();
+					NaveJ.Y += 1;
+					NaveJ.dibujar();
 				};
 				break;
 			case 'd':
 				if (NaveJ.X < bordeDer) {
+					NaveJ.borrar();
 					NaveJ.X += 1;
+					NaveJ.dibujar();
 				};
 				break;
 			case ' ':
