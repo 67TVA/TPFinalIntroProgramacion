@@ -26,7 +26,7 @@ private:
 	
 public:
 	EstructuraDePosicion(int velocidad,int color);
-    int PosX(){return x;};
+	int PosX(){return x;};
 	int PosY(){return y;};
 	void setX(int a){ x = a;};
 	void setY(int b){ y = b;};
@@ -82,14 +82,10 @@ void EstructuraDePosicion::mover(){
 	if (x <= bordeIzq) {
 		direccion = 1;
 	}
-	//if (y <= bordeSup) {
-	//	direccionY = 1;
-	//}
-	//if (y >= bordeInf) {
-	//	direccionY = -1;
-	//}
+
+
 	x = x + (1 * direccion);
-	//y = y + (1 * direccionY);
+
 }	
 
 class Meteorito: public EstructuraDePosicion{
@@ -106,16 +102,16 @@ void Meteorito::dibujar(){
 }
 void Meteorito::mover(){
 	
-
+	
 	
 	if (PosY() >=bordeInf) {
 		setX (rand()%24+2);
 		setY (4);
 	}
-
-
+	
+	
 	setY (PosY() + 1);
-
+	
 }	
 
 class X: public EstructuraDePosicion {
@@ -142,8 +138,8 @@ public:
 		gotoxy(X,Y);
 		dibujar();
 	};
-	void borrar();
-	void dibujar();
+		void borrar();
+		void dibujar();
 };
 void NaveJugador::borrar(){
 	gotoxy(X,Y);
@@ -175,9 +171,7 @@ void Disparo::mover(){
 	if (PosY() == bordeSup) {
 	}
 	
-	//if (y >= bordeInf) {
-	//	direccionY = -1;
-	
+
 	setY (PosY() - 1);
 	
 }	
@@ -192,25 +186,25 @@ private:
 	EstructuraDePosicion *m1 = new Meteorito;
 	EstructuraDePosicion *d1 = new Disparo;
 	NaveJugador NaveJ;
-	
-public:
-	Sistema();
 	void DibujarPlantilla();
 	void Teclado();
 	void gameover();
 	void Logica();
 	void Colisiones();
+	
+public:
+	Sistema();
 	void IniciarJuego();
 };
 
 
-	Sistema::Sistema(){
+Sistema::Sistema(){
 	NaveJ.resetposicion();
 	p2->setY(7);
-	}
-	
+}
+
 void Sistema::DibujarPlantilla(){
-    gotoxy(1,1);
+	gotoxy(1,1);
 	
 	cout<<"Instrucciones:"<<endl;
 	cout<<"Movimiento: WASD"<<endl;
@@ -341,7 +335,7 @@ void Sistema::IniciarJuego(){
 int main(int argc, char *argv[]) {
 	Sistema sistema;
 	sistema.IniciarJuego();
-		
+	
 	
 	return 0;
 }
