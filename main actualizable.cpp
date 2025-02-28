@@ -67,7 +67,9 @@ void EstructuraDePosicion::borrar(){
 	textcolor(col);
 }
 
-void EstructuraDePosicion::resetposicion(){}
+void EstructuraDePosicion::resetposicion(){
+	
+}
 
 void EstructuraDePosicion::dibujar(){
 	gotoxy(x,y);
@@ -78,6 +80,7 @@ void EstructuraDePosicion::mover(){
 	
 	if (x >= bordeDer) {
 		direccion = -1;
+
 	}
 	if (x <= bordeIzq) {
 		direccion = 1;
@@ -95,6 +98,7 @@ public:
 	Meteorito(int velocidad = 4, int color = 6) : EstructuraDePosicion(velocidad, color) {}
 	void dibujar();
 	void mover();
+	void resetposicion();
 };
 void Meteorito::dibujar(){
 	gotoxy(PosX(),PosY());
@@ -105,20 +109,26 @@ void Meteorito::mover(){
 	
 	
 	if (PosY() >=bordeInf) {
-		setX (rand()%24+2);
-		setY (4);
+		resetposicion();
 	}
 	
 	
 	setY (PosY() + 1);
 	
 }	
+void Meteorito::resetposicion(){
+	setY (4);
+	setX (rand()%24+2);
+	if (PosX() > 24){setX(24);};
+	
+}
 
 class X: public EstructuraDePosicion {
 private:
 	
 public:
 	void dibujar();
+	void resetposicion();
 	X(int velocidad , int color ) : EstructuraDePosicion(velocidad, color) {};
 };
 
@@ -127,7 +137,21 @@ void X::dibujar(){
 	cout<<'X';
 }
 
-
+void X::resetposicion(){
+	gotoxy(PosX(),PosY());
+	textcolor(7);
+	cout<<' ';
+	int d = (rand()%1+2);
+	switch(d){
+	case 1:
+		setX (1);
+		break;
+	case 2:
+		setX(23);
+		break;
+	};
+	setY (rand()%5+6);
+}
 class NaveJugador{
 public:
 	int X,Y;
@@ -187,6 +211,7 @@ private:
 	EstructuraDePosicion *d1 = new Disparo;
 	NaveJugador NaveJ;
 	void DibujarPlantilla();
+	void MensajePantalla();
 	void Teclado();
 	void gameover();
 	void Logica();
@@ -207,7 +232,7 @@ void Sistema::DibujarPlantilla(){
 	gotoxy(1,1);
 	
 	cout<<"Instrucciones:"<<endl;
-	cout<<"Movimiento: WASD"<<endl;
+	cout<<"Movimiento: WASD - Disparo: espacio"<<endl;
 	cout<<"Muevete para esquivar los meteoritos y dispara a las X!"<<endl;
 	cout<<"-------------------------"<<endl;
 	for(int i = 0;i < 10;i++){
@@ -266,6 +291,26 @@ void Sistema::Teclado(){
 	};
 }
 
+void Sistema::MensajePantalla(){
+	DisparoActivo = false;
+	gotoxy (27,10);
+	mensaje = rand()%3+1;
+	switch(mensaje){
+	case 1:
+		cout<<"Good shot!        ";
+		break;
+	case 2:
+		cout<<"Bullseye!         ";
+		break;
+	case 3:
+		cout<<"Amazing!         ";
+		break;
+		
+	};
+	gotoxy(12,18);
+	textcolor(7);
+	cout<<puntaje;
+}
 
 void Sistema::gameover(){
 	gotoxy(9,9);
@@ -275,7 +320,9 @@ void Sistema::gameover(){
 	cout<<"Puntaje: "<<puntaje;
 	textcolor(7);
 	gotoxy(1,17);
+	
 }
+
 void Sistema::Logica(){
 	p1->start();
 	p2->start();
@@ -288,6 +335,7 @@ void Sistema::Colisiones(){
 		gotoxy(10,17);
 		textcolor(7);
 		cout<<vidas;
+		
 	};
 	if (DisparoActivo){
 		d1->start();
@@ -297,30 +345,22 @@ void Sistema::Colisiones(){
 			textcolor(7);
 			cout<<"-";
 		}
-		if(d1->PosX() == p1->PosX() && d1->PosY() == p1->PosY() || d1->PosX() == p2->PosX() && d1->PosY() == p2->PosY()){
+		if(d1->PosX() == p1->PosX() && d1->PosY() == p1->PosY()){
+			puntaje += 150;
+			MensajePantalla();
+			p1->resetposicion();
+			
+		};
+		if(d1->PosX() == p2->PosX() && d1->PosY() == p2->PosY()){
 			puntaje += 100;
-			DisparoActivo = false;
-			gotoxy (27,10);
-			mensaje = rand()%3+1;
-			switch(mensaje){
-			case 1:
-				cout<<"Good shot!        ";
-				break;
-			case 2:
-				cout<<"Bullseye!         ";
-				break;
-			case 3:
-				cout<<"Amazing!         ";
-				break;
-				
-			};
-			gotoxy(12,18);
-			textcolor(7);
-			cout<<puntaje;
+			MensajePantalla();
+			p2->resetposicion();
 		};
 		
 	};
 }
+
+
 void Sistema::IniciarJuego(){
 	DibujarPlantilla();
 	while (vidas > 0){
@@ -339,3 +379,4 @@ int main(int argc, char *argv[]) {
 	
 	return 0;
 }
+
