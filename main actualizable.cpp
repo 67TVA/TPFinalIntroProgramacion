@@ -144,7 +144,7 @@ void X::resetposicion(){
 	int d = (rand()%2+1);
 	switch(d){
 	case 1:
-		setX (1);
+		setX (2);
 		break;
 	case 2:
 		setX(23);
