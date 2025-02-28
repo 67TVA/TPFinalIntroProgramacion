@@ -141,7 +141,7 @@ void X::resetposicion(){
 	gotoxy(PosX(),PosY());
 	textcolor(7);
 	cout<<' ';
-	int d = (rand()%1+2);
+	int d = (rand()%2+1);
 	switch(d){
 	case 1:
 		setX (1);
